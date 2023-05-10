@@ -14,7 +14,7 @@ app.use("/authentication", require("./routes/jwtAuth"));
 app.use("/auth", require("./routes/dashboard"));
 
 app.listen(port, () => {
-  console.log(`Server is starting on port ${port}`);
+  console.log(`Server is starting on localhost:${port}`);
 });
 
 // app.get('/users', async (req, res) => {
