@@ -5,6 +5,7 @@ const pool = require("../db");
 const validInfo = require("../middleware/validInfo");
 const jwtGenerator = require("../utils/jwtGenerator");
 const authorize = require("../middleware/authorize");
+const jwt = require("jsonwebtoken");
 
 //authorizeentication
 
@@ -72,7 +73,16 @@ router.post("/login", validInfo, async (req, res) => {
     });
   }
 });
-
+router.get("/logout", authorize, async (req, res) => {
+  const token = req.header("authorization").replace(/^Bearer\s/i, "");
+  const user = await pool.query("SELECT * FROM users WHERE id = $1", [
+    req.user.id,
+  ]);
+  console.log(req.header("authorization"));
+  res
+    .status(200)
+    .json({ status: 200, message: "Your account has been logout" });
+});
 router.post("/verify", authorize, (req, res) => {
   try {
     res.json(true);
