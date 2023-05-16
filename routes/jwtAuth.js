@@ -41,7 +41,6 @@ router.post("/register", validInfo, async (req, res) => {
   }
 });
 
-
 router.post("/login", validInfo, async (req, res) => {
   const { email, password } = req.body;
 
@@ -66,7 +65,9 @@ router.post("/login", validInfo, async (req, res) => {
       });
     }
     const token = jwtGenerator(user.rows[0].id);
-    return res.cookie('token',token, {httpOnly: true}).json({ status: "Success", token: token });
+    return res
+      .cookie("token", token, { httpOnly: true })
+      .json({ status: "Success", token: token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -76,16 +77,14 @@ router.post("/login", validInfo, async (req, res) => {
   }
 });
 
-
 router.get("/logout", authorize, async (req, res) => {
   const token = req.header("authorization");
-  res.clearCookie('token');
+  res.clearCookie("token");
   console.log(res);
   res
     .status(200)
     .json({ status: 200, message: "Your account has been logout" });
 });
-
 
 router.post("/verify", authorize, (req, res) => {
   try {

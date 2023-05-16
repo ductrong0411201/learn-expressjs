@@ -3,7 +3,6 @@ const authorize = require("../middleware/authorize");
 const pool = require("../db");
 const getGeoInfo = require("../utils/getGeoInfo");
 
-
 router.get("/me", authorize, async (req, res) => {
   try {
     const user = await pool.query("SELECT * FROM users WHERE id = $1", [
@@ -19,7 +18,6 @@ router.get("/me", authorize, async (req, res) => {
     });
   }
 });
-
 
 router.get("/geo-info", authorize, async (req, res) => {
   const { latitude, longitude } = req.query;
