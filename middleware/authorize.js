@@ -1,9 +1,5 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const {
-  addTokenToBlacklist,
-  isTokenBlacklisted,
-} = require("../utils/blacklist");
 
 module.exports = function (req, res, next) {
   const authorization = req.header("cookie");

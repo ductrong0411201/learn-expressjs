@@ -6,10 +6,6 @@ const validInfo = require("../middleware/validInfo");
 const jwtGenerator = require("../utils/jwtGenerator");
 const authorize = require("../middleware/authorize");
 const jwt = require("jsonwebtoken");
-const {
-  addTokenToBlacklist,
-  isTokenBlacklisted,
-} = require("../utils/blacklist");
 
 //authorizeentication
 
@@ -45,6 +41,7 @@ router.post("/register", validInfo, async (req, res) => {
   }
 });
 
+
 router.post("/login", validInfo, async (req, res) => {
   const { email, password } = req.body;
 
@@ -78,6 +75,8 @@ router.post("/login", validInfo, async (req, res) => {
     });
   }
 });
+
+
 router.get("/logout", authorize, async (req, res) => {
   const token = req.header("authorization");
   res.clearCookie('token');
@@ -86,6 +85,8 @@ router.get("/logout", authorize, async (req, res) => {
     .status(200)
     .json({ status: 200, message: "Your account has been logout" });
 });
+
+
 router.post("/verify", authorize, (req, res) => {
   try {
     res.json(true);
