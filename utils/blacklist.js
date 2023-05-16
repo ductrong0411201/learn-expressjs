@@ -9,9 +9,7 @@ function addTokenToBlacklist(token) {
 }
 
 function isTokenBlacklisted(token, verify) {
-  console.log(token, verify);
   const deathToken = blackList.filter((e) => (e.token = token));
-  console.log('death',deathToken);
   if (deathToken.length > 0) {
     if (deathToken.timeLogout <= verify.iat) {
       return false;

@@ -13,7 +13,7 @@ module.exports = function (req, res, next) {
       .json({ status: 403, message: "Authorization denied" });
   }
   try {
-    token = authorization.replace(/^Bearer\s/i, "");
+    let token = authorization.replace(/^Bearer\s/i, "");
     const verify = jwt.verify(token, process.env.JWT_SECRET);
     if (isTokenBlacklisted(authorization, verify)) {
       return res.status(401).json({
