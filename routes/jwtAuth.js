@@ -79,16 +79,11 @@ router.post("/login", validInfo, async (req, res) => {
 
 router.get("/logout", authorize, async (req, res) => {
   const token = req.header("authorization");
-  res.clearCookie("token");
-  console.log(res);
-  res
-    .status(200)
-    .json({ status: 200, message: "Your account has been logout" });
-});
-
-router.post("/verify", authorize, (req, res) => {
   try {
-    res.json(true);
+    res.clearCookie("token");
+    res
+      .status(200)
+      .json({ status: 200, message: "Your account has been logout" });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -96,6 +91,18 @@ router.post("/verify", authorize, (req, res) => {
       message: "Server error",
     });
   }
-});
+}),
+
+router.post("/verify", authorize, (req, res) => {
+    try {
+      res.json(true);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({
+        status: 500,
+        message: "Server error",
+      });
+    }
+  });
 
 module.exports = router;
