@@ -32,9 +32,10 @@ router.post("/register", validInfo, async (req, res) => {
       "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
       [name, email, bcryptPassword]
     );
-    const jwtToken = jwtGenerator(newUser.rows[0].id);
-
-    return res.json({ jwtToken });
+    return res.status(200).json({
+      status: 200,
+      message: "Account has been register",
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -67,8 +68,8 @@ router.post("/login", validInfo, async (req, res) => {
         message: "Invalid Credential",
       });
     }
-    const jwtToken = jwtGenerator(user.rows[0].id);
-    return res.json({ jwtToken });
+    const token = jwtGenerator(user.rows[0].id);
+    return res.cookie('token',token, {httpOnly: true}).json({ status: "Success", token: token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -79,7 +80,8 @@ router.post("/login", validInfo, async (req, res) => {
 });
 router.get("/logout", authorize, async (req, res) => {
   const token = req.header("authorization");
-  addTokenToBlacklist(token);
+  res.clearCookie('token');
+  console.log(res);
   res
     .status(200)
     .json({ status: 200, message: "Your account has been logout" });
