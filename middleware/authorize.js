@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-import blackList from "../routes/jwtAuth";
+const {
+  addTokenToBlacklist,
+  isTokenBlacklisted,
+} = require("../utils/blacklist");
+
 module.exports = function (req, res, next) {
   const authorization = req.header("authorization");
   if (!authorization) {
@@ -8,12 +12,15 @@ module.exports = function (req, res, next) {
       .status(403)
       .json({ status: 403, message: "Authorization denied" });
   }
-  const currentTime = Math.floor(Date.now() / 1000);
-  const deathToken = blackList.filter(e => e.token = authorization)
-  
   try {
     token = authorization.replace(/^Bearer\s/i, "");
     const verify = jwt.verify(token, process.env.JWT_SECRET);
+    if (isTokenBlacklisted(authorization, verify)) {
+      return res.status(401).json({
+        status: 401,
+        message: "Token is not valid",
+      });
+    }
     req.user = verify.user;
     next();
   } catch (err) {

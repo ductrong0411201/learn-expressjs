@@ -6,9 +6,12 @@ const validInfo = require("../middleware/validInfo");
 const jwtGenerator = require("../utils/jwtGenerator");
 const authorize = require("../middleware/authorize");
 const jwt = require("jsonwebtoken");
+const {
+  addTokenToBlacklist,
+  isTokenBlacklisted,
+} = require("../utils/blacklist");
 
 //authorizeentication
-let blackList = [];
 
 router.post("/register", validInfo, async (req, res) => {
   const { email, name, password } = req.body;
@@ -76,14 +79,7 @@ router.post("/login", validInfo, async (req, res) => {
 });
 router.get("/logout", authorize, async (req, res) => {
   const token = req.header("authorization");
-  const verify = jwt.verify(
-    token.replace(/^Bearer\s/i, ""),
-    process.env.JWT_SECRET
-  );
-  blackList.push({
-    token: token,
-    expiresIn: verify.exp,
-  });
+  addTokenToBlacklist(token);
   res
     .status(200)
     .json({ status: 200, message: "Your account has been logout" });
@@ -101,4 +97,3 @@ router.post("/verify", authorize, (req, res) => {
 });
 
 module.exports = router;
-export default blackList
